@@ -10,7 +10,7 @@
 .DS_Store
 
 # aws cloudformation package output
-01api/petstore-api-output.yaml
+01api/space-eyes-api-output.yaml
 
 # CMake
 cmake-build-*/
