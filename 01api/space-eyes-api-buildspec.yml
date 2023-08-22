@@ -1,0 +1,13 @@
+version: 0.2
+phases:
+  install:
+    commands:
+      - cd 01api
+      - aws cloudformation package --template-file space-eyes-api.yaml
+                                   --s3-bucket api-testing
+                                   --s3-prefix api-code
+                                   --output-template-file space-eyes-api-output.yaml
+artifacts:
+  type: zip
+  files:
+    - 01api/space-eyes-api-output.yaml

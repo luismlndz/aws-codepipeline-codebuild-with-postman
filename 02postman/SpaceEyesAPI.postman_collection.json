@@ -1,0 +1,53 @@
+{
+	"info": {
+		"_postman_id": "0bb6eaf0-f28c-43ca-b83e-bd69295d74db",
+		"name": "SpaceEyesAPI",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "17992897"
+	},
+	"item": [
+		{
+			"name": "Sensor Fusion - AOI request",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"timestamp_utc_start\": \"2022-06-25 00:00:00\",\r\n  \"timestamp_utc_end\": \"2022-12-25 00:00:00\",\r\n  \"area_of_interest\": \"POLYGON ((37.94937448100006 44.77463101400008, 37.66711467600004 45.61837073000004, 35.08326373500006 45.429614377000064, 34.23379615600004 44.73996726200005, 28.589714650000076 45.20634161900006, 27.56178749600008 42.61748804500007, 28.073775271000045 41.59304610300006, 28.766117433000034 41.29860173600008, 26.64395197400006 40.70215620300007, 26.984909837000032 39.98724455400003, 29.723571383000035 40.65816164000006, 29.800561868000045 41.18609639600004, 31.261605648000057 41.02172795900003, 32.39624108500004 41.68103522900003, 33.58409428600004 42.02199309200006, 34.80494340900003 41.96699988900008, 36.124780298000076 41.23009095900005, 37.752579129000026 40.90013173600005, 40.22884816000004 40.79561406800008, 41.83498433900007 41.783090386000026, 41.513757103000046 42.71108017800003, 37.94937448100006 44.77463101400008))\",\r\n  \"sensor_type_1\": [\"eo\", \"rf\"]\r\n}"
+				},
+				"url": {
+					"raw": "{{apigw-root}}/sensor-fusion",
+					"protocol": "https",
+					"host": [
+						"jslgkqi1e0",
+						"execute-api",
+						"us-east-1",
+						"amazonaws",
+						"com"
+					],
+					"path": [
+						"beta",
+						"v1",
+						"products",
+						"sensor-fusion"
+					]
+				},
+				"description": "Search for sensor fusion results by area, time, and sensor type.\n\nSensor type options include:\n\n- EO\n- SAR\n- RF\n- VIIRS\n- AIS"
+			},
+			"response": []
+		}
+	]
+}
