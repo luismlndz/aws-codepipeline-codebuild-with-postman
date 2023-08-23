@@ -279,60 +279,60 @@ Resources:
           - Name: 'SpaceEyesAPI-SourceArtifact'
           RunOrder: 1
 
-      - Name: Build
-        Actions:
-        - Name: BuildSpaceEyesAPI
-          ActionTypeId:
-            Owner: AWS
-            Category: Build
-            Version: 1
-            Provider: CodeBuild
-          Configuration:
-            ProjectName: !Ref SpaceEyesAPISAMCodeBuildProject
-          InputArtifacts:
-          - Name: 'SpaceEyesAPI-SourceArtifact'
-          OutputArtifacts:
-          - Name: 'SpaceEyesAPI-BuildArtifact'
-          RunOrder: 1
+      # - Name: Build
+      #   Actions:
+      #   - Name: BuildSpaceEyesAPI
+      #     ActionTypeId:
+      #       Owner: AWS
+      #       Category: Build
+      #       Version: 1
+      #       Provider: CodeBuild
+      #     Configuration:
+      #       ProjectName: !Ref SpaceEyesAPISAMCodeBuildProject
+      #     InputArtifacts:
+      #     - Name: 'SpaceEyesAPI-SourceArtifact'
+      #     OutputArtifacts:
+      #     - Name: 'SpaceEyesAPI-BuildArtifact'
+      #     RunOrder: 1
 
-      - Name: Deploy
-        Actions:
-        - Name: GenerateChangeSet
-          ActionTypeId:
-            Owner: AWS
-            Category: Deploy
-            Version: 1
-            Provider: CloudFormation
-          Configuration:
-            TemplatePath: !Join
-            - ''
-            - - 'SpaceEyesAPI-BuildArtifact'
-              - '::01api/space-eyes-api-output.yaml'
-            ActionMode: CHANGE_SET_REPLACE
-            Capabilities: CAPABILITY_IAM
-            ChangeSetName: pipeline-changeset
-            RoleArn: !GetAtt
-            - CloudFormationTrustRole
-            - Arn
-            StackName: space-eyes-api-stack
-          InputArtifacts:
-          - Name: 'SpaceEyesAPI-BuildArtifact'
-          OutputArtifacts: []
-          RunOrder: 1
+      # - Name: Deploy
+      #   Actions:
+      #   - Name: GenerateChangeSet
+      #     ActionTypeId:
+      #       Owner: AWS
+      #       Category: Deploy
+      #       Version: 1
+      #       Provider: CloudFormation
+      #     Configuration:
+      #       TemplatePath: !Join
+      #       - ''
+      #       - - 'SpaceEyesAPI-BuildArtifact'
+      #         - '::01api/space-eyes-api-output.yaml'
+      #       ActionMode: CHANGE_SET_REPLACE
+      #       Capabilities: CAPABILITY_IAM
+      #       ChangeSetName: pipeline-changeset
+      #       RoleArn: !GetAtt
+      #       - CloudFormationTrustRole
+      #       - Arn
+      #       StackName: space-eyes-api-stack
+      #     InputArtifacts:
+      #     - Name: 'SpaceEyesAPI-BuildArtifact'
+      #     OutputArtifacts: []
+      #     RunOrder: 1
 
-        - Name: ExecuteChangeSet
-          ActionTypeId:
-            Owner: AWS
-            Category: Deploy
-            Version: 1
-            Provider: CloudFormation
-          Configuration:
-            ActionMode: CHANGE_SET_EXECUTE
-            ChangeSetName: pipeline-changeset
-            StackName: space-eyes-api-stack
-          InputArtifacts: []
-          OutputArtifacts: []
-          RunOrder: 2
+      #   - Name: ExecuteChangeSet
+      #     ActionTypeId:
+      #       Owner: AWS
+      #       Category: Deploy
+      #       Version: 1
+      #       Provider: CloudFormation
+      #     Configuration:
+      #       ActionMode: CHANGE_SET_EXECUTE
+      #       ChangeSetName: pipeline-changeset
+      #       StackName: space-eyes-api-stack
+      #     InputArtifacts: []
+      #     OutputArtifacts: []
+      #     RunOrder: 2
 
       # https://docs.aws.amazon.com/codepipeline/latest/userguide/actions-invoke-lambda-function.html
       - Name: Test
