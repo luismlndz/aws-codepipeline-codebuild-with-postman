@@ -28,7 +28,7 @@ Resources:
     Type: "AWS::IAM::Role"
     Properties:
       RoleName:
-        Fn::Sub: ${AWS::StackName}-CodePipelineRole
+        Fn::Sub: space-eyes-api-stack-CodePipelineRole
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -44,7 +44,7 @@ Resources:
       Policies:
       -
         PolicyName:
-          Fn::Sub: ${AWS::StackName}-CodePipelineRolePolicy
+          Fn::Sub: space-eyes-api-stack-CodePipelineRolePolicy
         PolicyDocument:
           Version: "2012-10-17"
           Statement:
@@ -84,7 +84,7 @@ Resources:
     Type: AWS::IAM::Role
     Properties:
       RoleName:
-        Fn::Sub: ${AWS::StackName}-CodeBuildServiceRole
+        Fn::Sub: space-eyes-api-stack-CodeBuildServiceRole
       AssumeRolePolicyDocument:
         Version: "2012-10-17"
         Statement:
@@ -99,7 +99,7 @@ Resources:
       Policies:
       -
         PolicyName:
-          Fn::Sub: ${AWS::StackName}-CodeBuildServiceRole-Policy
+          Fn::Sub: space-eyes-api-stack-CodeBuildServiceRole-Policy
         PolicyDocument:
           Version: "2012-10-17"
           Statement:
@@ -132,10 +132,10 @@ Resources:
             - "s3:GetObjectVersion"
             - "s3:ListBucket"
             Resource:
-            - Fn::Sub: arn:aws:s3:::${AWS::StackName}-codepipeline-artifact-bucket-${AWS::AccountId}/*
-            - Fn::Sub: arn:aws:s3:::${AWS::StackName}-codepipeline-artifact-bucket-${AWS::AccountId}
-            - Fn::Sub: arn:aws:s3:::${BucketRoot}/*
-            - Fn::Sub: arn:aws:s3:::${BucketRoot}
+            - Fn::Sub: arn:aws:s3:::space-eyes-api-stack-codepipeline-artifact-bucket-${AWS::AccountId}/*
+            - Fn::Sub: arn:aws:s3:::space-eyes-api-stack-codepipeline-artifact-bucket-${AWS::AccountId}
+            - Fn::Sub: arn:aws:s3:::api-testing/*
+            - Fn::Sub: arn:aws:s3:::api-testing
           -
             Effect: "Allow"
             Action:
@@ -151,7 +151,7 @@ Resources:
       ManagedPolicyArns:
       - 'arn:aws:iam::aws:policy/AdministratorAccess'
       RoleName:
-        Fn::Sub: ${AWS::StackName}-CloudFormationTrustRole
+        Fn::Sub: space-eyes-api-stack-CloudFormationTrustRole
       AssumeRolePolicyDocument:
         Statement:
         - Action: 'sts:AssumeRole'
@@ -167,53 +167,53 @@ Resources:
     Properties:
       AccessControl: Private
       BucketName:
-        Fn::Sub: ${AWS::StackName}-codepipeline-artifact-bucket-${AWS::AccountId}
+        Fn::Sub: space-eyes-api-stack-codepipeline-artifact-bucket-${AWS::AccountId}
       VersioningConfiguration:
         Status: Enabled
       Tags:
       - Key: Name
         Value:
-          Fn::Sub: ${AWS::StackName}-codepipeline-artifact-bucket
+          Fn::Sub: space-eyes-api-stack-codepipeline-artifact-bucket
 
   #code build - api deployment using SAM (see buildspec.yml)
-  SpaceEyesAPISAMCodeBuildProject:
-    Type: AWS::CodeBuild::Project
-    Properties:
-      Name: space-eyes-api-stack-project
-      Description: CodeBuild Project using AWS SAM to deploy SpaceEyes API
-      ServiceRole:
-        Fn::GetAtt: [ CodeBuildServiceRole, Arn ]
-      Artifacts:
-        Type: S3
-        Location:
-          Ref: CodePipelineArtifactBucket
-        Name:
-          Fn::Sub: ${AWS::StackName}-space-eyes-api-stack-codebuild-project
-      Environment:
-        Type: LINUX_CONTAINER
-        ComputeType: BUILD_GENERAL1_SMALL
-        Image: aws/codebuild/nodejs:8.11.0
-      Source:
-        Location: !Join
-        - ''
-        - - 'https://github.com/'
-          - !Ref GitHubUser
-          - '/'
-          - !Ref GitHubRepositoryName
-        Type:  GITHUB
-        BuildSpec: 01api/space-eyes-api-buildspec.yml
-      TimeoutInMinutes: 10
-      Tags:
-      - Key: Name
-        Value:
-          Fn::Sub: ${AWS::StackName}-space-eyes-api-stack-project
+  # SpaceEyesAPISAMCodeBuildProject:
+  #   Type: AWS::CodeBuild::Project
+  #   Properties:
+  #     Name: space-eyes-api-stack-project
+  #     Description: CodeBuild Project using AWS SAM to deploy SpaceEyes API
+  #     ServiceRole:
+  #       Fn::GetAtt: [ CodeBuildServiceRole, Arn ]
+  #     Artifacts:
+  #       Type: S3
+  #       Location:
+  #         Ref: CodePipelineArtifactBucket
+  #       Name:
+  #         Fn::Sub: space-eyes-api-stack-space-eyes-api-stack-codebuild-project
+  #     Environment:
+  #       Type: LINUX_CONTAINER
+  #       ComputeType: BUILD_GENERAL1_SMALL
+  #       Image: aws/codebuild/nodejs:8.11.0
+  #     Source:
+  #       Location: !Join
+  #       - ''
+  #       - - 'https://github.com/'
+  #         - !Ref GitHubUser
+  #         - '/'
+  #         - !Ref GitHubRepositoryName
+  #       Type:  GITHUB
+  #       BuildSpec: 01api/space-eyes-api-buildspec.yml
+  #     TimeoutInMinutes: 10
+  #     Tags:
+  #     - Key: Name
+  #       Value:
+  #         Fn::Sub: space-eyes-api-stack-space-eyes-api-stack-project
 
   #code build - api testing using Newman to execute Postman test def (see buildspec.yml)
   PostmanNewmanCodeBuildProject:
     Type: AWS::CodeBuild::Project
     Properties:
       Name:
-        Fn::Sub: ${AWS::StackName}-newman-project
+        Fn::Sub: space-eyes-api-stack-newman-project
       Description: CodeBuild Project using newman cli to execute postman tests
       ServiceRole:
         Fn::GetAtt: [ CodeBuildServiceRole, Arn ]
@@ -222,7 +222,7 @@ Resources:
         Location:
           Ref: CodePipelineArtifactBucket
         Name:
-          Fn::Sub: ${AWS::StackName}-newman-project
+          Fn::Sub: space-eyes-api-stack-newman-project
       Environment:
         Type: LINUX_CONTAINER
         ComputeType: BUILD_GENERAL1_SMALL
@@ -231,7 +231,7 @@ Resources:
           - Name: S3_BUCKET
             Type: PLAINTEXT
             Value:
-              Fn::Sub: ${BucketRoot}
+              Fn::Sub: api-testing
       Source:
         Location: !Join
           - ''
@@ -245,7 +245,7 @@ Resources:
       Tags:
         - Key: Name
           Value:
-            Fn::Sub: ${AWS::StackName}-newman-project
+            Fn::Sub: space-eyes-api-stack-newman-project
 
 
   SpaceEyesAPIPipeline:
@@ -378,7 +378,7 @@ Resources:
             - s3:GetObject
             - s3:GetObjectVersion
             Resource:
-            - Fn::Sub: arn:aws:s3:::${BucketRoot}/*
+            - Fn::Sub: arn:aws:s3:::api-testing/*
           -
             Effect: Allow
             Action:
